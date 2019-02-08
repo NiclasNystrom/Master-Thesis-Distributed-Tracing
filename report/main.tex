@@ -1,0 +1,135 @@
+\documentclass[10pt, titlepage, oneside, a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[titletoc]{appendix}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb, graphicx, fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm,algorithm,yhmath,enumitem,lscape}
+\usepackage[noend]{algpseudocode}
+\usepackage{pifont}
+\usepackage{tcolorbox}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{subcaption} 
+\usepackage{amstext}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{hyperref}
+\usepackage{pgfgantt}
+\usepackage{adjustbox}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{courier}
+\usepackage{hyperref, url}
+\usepackage{hyperref,xcolor}
+
+\usepackage{biblatex}
+\addbibresource{references.bib}
+
+
+\definecolor{mygreen}{RGB}{28,172,0} 
+\definecolor{mylilas}{RGB}{170,55,241}
+\definecolor{barblue}{RGB}{153,204,254}
+\definecolor{groupblue}{RGB}{51,102,254}
+\definecolor{linkred}{RGB}{165,0,33}
+\definecolor{black}{RGB}{35,31,32}            
+\definecolor{yellow}{RGB}{255,196,37}       
+
+\hypersetup{
+  colorlinks   = true, %Colours links instead of ugly boxes
+  urlcolor     = blue, %Colour for external hyperlinks
+  linkcolor    = black, %Colour of internal links
+  citecolor   = blue
+}
+
+\def\inst{}
+\def\course{ Improving Operations with Distributed Tracing }
+\def\title{Report}
+\def\name{Niclas Nyström}
+\def\username{c14nnm}
+\def\email{\username@cs.umu.se}
+
+\def\netrounds_supervisor{Joakim Söderberg}
+\def\uni_supervisor{Jerry Eriksson}
+\def\week{2} % Current week in project (1-20)
+
+\begin{document}
+\setcounter{secnumdepth}{5}
+	\begin{titlepage}
+		\thispagestyle{empty}
+		\begin{large}
+			\begin{tabular}{@{}p{\textwidth}@{}}
+				\textbf{UMEÅ UNIVERSITY \hfill \today} \\
+				\textbf{Department of Computing Science} \\
+			\end{tabular}
+		\end{large}
+		\vspace{25mm}
+		\begin{center}
+			\huge{\textbf{\course}}\\
+			\vspace{10mm}
+			\LARGE{\title} \\
+			\vspace{2mm}
+		    \LARGE{version 1.0} \\
+            \vspace{10mm}
+			\begin{large}
+				\begin{tabular}{ll}
+                	\textbf{Name} & \href{mailto:c14nnm@cs.umu.se}{\name}\\ %\hspace{0.6cm}(\href{mailto:c14nnm@cs.umu.se}{c14nnm@cs.umu.se})\\
+					\textbf{Netrounds Supervisor} & \href{mailto:joakim.soderberg@netrounds.com}{\netrounds_supervisor}\\ %(\href{mailto:joakim.soderberg@netrounds.com}{joakim.soderberg@netrounds.com})\\
+					\textbf{University Supervisor} & \href{mailto:jerry@cs.umu.se}{\uni_supervisor}\\ %\hspace{0.65cm}(\href{mailto:jerry@cs.umu.se}{jerry@cs.umu.se})\\
+					\textbf{Examinator} & \href{mailto:henrikb@cs.umu.se}{Henrik Björklund}\\ %\hspace{0.1cm}(henrikb@cs.umu.se)\\
+				\end{tabular}
+			\vfill
+            \vfill			\end{large}
+
+
+		\end{center}
+	\end{titlepage}
+    
+	\rfoot{\footnotesize{\today}}
+	\lhead{\sc\footnotesize\title}
+	\rhead{\nouppercase{\sc\footnotesize\leftmark}}
+	\pagestyle{fancy}
+	\renewcommand{\headrulewidth}{0.2pt}
+	\renewcommand{\footrulewidth}{0.2pt}
+
+
+    \pagenumbering{roman}
+	\newpage
+
+	\pagenumbering{arabic}% Change to numbers
+	
+	\setlength{\parindent}{0pt}
+	\setlength{\parskip}{10pt}
+	
+\tableofcontents
+\newpage
+
+\input{abstract.tex}
+\newpage
+\input{acknowledgements.tex}
+\newpage
+\input{introduction/introduction.tex}
+\newpage
+\input{background/background.tex}
+\newpage
+\input{implementation/implementation.tex}
+\newpage
+\input{evaluation/evaluation.tex}
+\newpage
+\input{discussion_conclusions/discussion_conclusion.tex}
+
+
+
+
+\newpage
+%\addcontentsline{toc}{section}{References}
+%\bibliographystyle{plain}
+\section{References}
+dummy cite\cite{nystroem_2019}
+\printbibliography[heading=none]
+
+\newpage
+\input{appendix/appendix.tex}
+
+\end{document}

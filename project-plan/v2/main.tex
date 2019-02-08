@@ -1,0 +1,463 @@
+\documentclass[10pt, titlepage, oneside, a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[titletoc]{appendix}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb, graphicx, fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm,algorithm,yhmath,enumitem,lscape}
+\usepackage[noend]{algpseudocode}
+\usepackage{pifont}
+\usepackage{tcolorbox}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{subcaption} 
+\usepackage{amstext}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{hyperref}
+\usepackage{pgfgantt}
+\usepackage{adjustbox}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{courier}
+\usepackage{hyperref, url}
+\usepackage{hyperref,xcolor}
+
+
+\definecolor{mygreen}{RGB}{28,172,0} 
+\definecolor{mylilas}{RGB}{170,55,241}
+\definecolor{barblue}{RGB}{153,204,254}
+\definecolor{groupblue}{RGB}{51,102,254}
+\definecolor{linkred}{RGB}{165,0,33}
+\definecolor{black}{RGB}{35,31,32}            
+\definecolor{yellow}{RGB}{255,196,37}       
+
+\hypersetup{
+  colorlinks   = true, %Colours links instead of ugly boxes
+  urlcolor     = blue, %Colour for external hyperlinks
+  linkcolor    = black, %Colour of internal links
+  citecolor   = blue
+}
+
+\def\inst{}
+\def\course{ Improving Operations with Distributed Tracing }
+\def\title{Project Plan}
+\def\name{Niclas Nyström}
+\def\username{c14nnm}
+\def\email{\username@cs.umu.se}
+
+\def\netrounds_supervisor{Joakim Söderberg}
+\def\uni_supervisor{Jerry Eriksson}
+\def\week{2} % Current week in project (1-20)
+
+\begin{document}
+\setcounter{secnumdepth}{5}
+	\begin{titlepage}
+		\thispagestyle{empty}
+		\begin{large}
+			\begin{tabular}{@{}p{\textwidth}@{}}
+				\textbf{UMEÅ UNIVERSITY \hfill \today} \\
+				\textbf{Department of Computing Science} \\
+			\end{tabular}
+		\end{large}
+		\vspace{25mm}
+		\begin{center}
+			\huge{\textbf{\course}}\\
+			\vspace{10mm}
+			\LARGE{\title} \\
+			\vspace{2mm}
+		    \LARGE{version 2.0} \\
+            \vspace{10mm}
+			\begin{large}
+				\begin{tabular}{ll}
+                	\textbf{Name} & \href{mailto:c14nnm@cs.umu.se}{\name}\\ %\hspace{0.6cm}(\href{mailto:c14nnm@cs.umu.se}{c14nnm@cs.umu.se})\\
+					\textbf{Netrounds Supervisor} & \href{mailto:joakim.soderberg@netrounds.com}{\netrounds_supervisor}\\ %(\href{mailto:joakim.soderberg@netrounds.com}{joakim.soderberg@netrounds.com})\\
+					\textbf{University Supervisor} & \href{mailto:jerry@cs.umu.se}{\uni_supervisor}\\ %\hspace{0.65cm}(\href{mailto:jerry@cs.umu.se}{jerry@cs.umu.se})\\
+					\textbf{Examinator} & \href{mailto:henrikb@cs.umu.se}{Henrik Björklund}\\ %\hspace{0.1cm}(henrikb@cs.umu.se)\\
+				\end{tabular}
+			\vfill
+            \vfill			\end{large}
+
+
+		\end{center}
+	\end{titlepage}
+    
+	\rfoot{\footnotesize{\today}}
+	\lhead{\sc\footnotesize\title}
+	\rhead{\nouppercase{\sc\footnotesize\leftmark}}
+	\pagestyle{fancy}
+	\renewcommand{\headrulewidth}{0.2pt}
+	\renewcommand{\footrulewidth}{0.2pt}
+
+
+    \pagenumbering{roman}
+	\newpage
+
+	\pagenumbering{arabic}% Change to numbers
+	
+	\setlength{\parindent}{0pt}
+	\setlength{\parskip}{10pt}
+	
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+This is a project plan for my master thesis as the final examination towards my masters degree in computer science at Umeå University in the spring semester of 2019. The project is done in cooperation with \textit{Netrounds} which specializes in network performance testing and quality assurance. 
+
+%\section{Problem Specification}
+
+\subsection{Background}
+
+Monitoring in software development has since long remained the same without evolving much in terms of tools and standards. Logging output and saving it onto files are the standard for most applications and programs nowadays and has been so since back in the days when systems only consisted of a couple of servers in the same network.
+
+But as the complexity of software systems increases for every day the difficulties of logging and monitoring the health- and performance of systems increases as well. As the current paradigm shift moving steadily towards distributed- and cloud-based systems modern programs faces increasing difficulties of maintaining the same level of monitoring ability as programs expands and consists of multiple servers spanning over several networks.
+
+This results in challenges like how to keep and store metrics and logs from all components in the system, how and when to alert if anomalies are detected in the systems and how to distinguish between components as a whole and as individual components when monitoring them.
+
+Solving the issue requires programs to have fine-grained control over all of their components in the system and having the ability to control and monitor each component from a high level.  
+
+Hence introducing \textbf{Open Tracing} API (\textbf{distributed tracing}) that can grant end-end visibility in systems by recording the journey of requests from one point to another. New open source frameworks that uses distributed tracing, like \textit{Jaeger} and \textit{Istio}, provides solutions for visualizing and analyzing cross-process requests between servers and networks and can be used for detecting and diagnosing anomalies and problems in systems and make distributed profiling. 
+
+
+More specific distributed tracing encapsulates a request/transaction into \textit{traces} which can be seen as \textit{directed acyclic graphs} (DAG) where each node is a component that the request passes through when travelling from A to B. The nodes in this context are called \textit{spans} and contains info as specified from the system. The info can be logs and metrics that later can easily be collected by a single method from point A \cite{wp}\cite{ot}. 
+
+
+As new techiques and architecture becomes popular due to the shift towards distributed- and cloud-based systems such as microservices and event-driven architecture the question emerges whether distributed tracing can be used for these architectures as well. Originally distributed tracing was intended for systems that propagates requests from A to B by passing through a number of components inbetween. The new techniques which often emphasizes on loosely-couple components for easier understanding and increasing modularity may not follow that type of structure but instead follows a bus implementation that components/services subscribes and unsubscribes to.  
+
+Traditionally end-end metrics, e.g. latency, helped systems to debug the performance of internal services. The rise of modern architectures however has resulted in the skewing of these metrics since it represents the system as a whole and does not describe the state of individual services. Distributed tracing solves that by breaking down the metrics on a per service base and traces the journey of the operations within the system which opens the door for in-depth profiling in form of \textit{Root-cause analysis}.
+
+\subsection{Problem Specification}
+This idea originated from the need of being able to analyze performance issues in large and complex distributed systems. Distributed tracing can grant systems the ability to pin-point issues to individual services and can additionally provide data to perform profiling such that it becomes possible to answer \underline{why} issues appeared and from \underline{where} it originated from (root-cause analysis). 
+
+\subsubsection{Research Questions}
+
+The main question of this project is as follows:
+
+\begin{quote}
+    
+    \begin{itemize}
+        \item \textit{How can distributed systems improve it's operations by tracing requests in order to gather necessary data to perform effective root-cause analysis?}
+    \end{itemize}
+\end{quote}
+
+As distributed systems strives to decrease the complexity of the system as a whole the consequence are that individual components/services gets more complex as a result of several factors such as heterogeneous and unreliability. As a result it gets harder to observe the system beyond the system as a whole and monitoring individual services are hard and expensive. \textit{Improving operations} means in this case how we can give the system the means to effectively test and debug operations on a fine-grained level in order to achieve observability and efficiency. Whether it's a slow service causing high end-end latency or some component that aren't behaving properly due to the state of other components the goal of this project is to investigate how distributed tracing can help distributed system to become more fault-tolerant and scalable due to increased observability and availability.
+
+
+
+
+
+\subsection{Netrounds}
+
+Netrounds are as of now in the process of transitioning their system from a monolith solution to an architecture that is event-driven and consists of microservices/kubernetes. Their vision is to have their core-system converted into an event-driven architecture using Kafka as the message bus and tools like Druid for time-series storage. 
+
+This architecture is as of now under development and is close for first deployment and the third goal (and partially the second goal as well) is connected to how they can benefit of adding distributed tracing into that architecture.
+
+The plan is to design a new design from the existing design but with distributed tracing added to it and test if it can provide some value to their system (pros/cons).
+
+
+\subsection{Goals}
+The goal of this project is to implement and investigate how distributed tracing can be used to improve the operations of companies that deals with large distributed systems.
+
+More specifically there are three goals to this project: The \underline{first} goal is to implement a program that uses distributed tracing into a distributed environment, like a Kubernetes cluster where distributed tracing is a sidecar in a Kubernetes pod, and test how effective it can detect anomalies like latency issues and component errors in the cluster and investigate how large distributed systems can benefit from it.
+
+The \underline{second} goal is to investigate whether distributed tracing can be applied to modern architectures such as microservices and event-driven architecture. This project will focus primarily on a event-driven bus architecture. This goal is of more hypothetical nature but may also contain a minimal implementation if it's possible and within the scope of this project.
+
+
+The \underline{third} goal is connected to \textit{Netrounds} and will consist of implementing distributed tracing to their platform in kubernetes form and perform tests to that architecture in order to analyze whether distributed tracing is beneficial to their system.
+
+
+
+
+
+\subsection{Objectives}
+
+The main objectives of this project are as follows:
+
+\begin{itemize}
+    \item Study of how (and if) distributed tracing can be applied to modern distributed- and cloud-based architecture patterns like \textit{event-driven architecture}.
+	\item Implement distributed tracing to investigate how it can handle and detect errors in large and complex systems. The program will be deployed as a sidecar in a \textit{Kubernetes} cluster and tested accordingly.
+	\item Study of how distributed tracing can help large and complex distributed systems to detect, monitor and analyze individual components in systems in order to detect anomalies such as high latancies. 
+	\item (Netrounds-1) Study of how distributed tracing can be beneficial to Netrounds existing architecture by creating a design with distributed tracing in mind, deploying the design and perform tests to evaluate pros and cons.
+	\item (Netrounds-2) Deploy the design in the context of Netrounds and perform tests to evaluate pros and cons and provide recommendations. 
+\end{itemize}
+
+Note: (Netrounds-x) is objectives specific to the company that I work together with during the project and the rest of the objectives are of a more general nature.
+
+
+
+\subsection{Critera for Success}
+
+The criteria of success for this project is when the implementation goals are achieved and enough data have been collected in order to make conclusions in regards to the objectives and goals that aren't specific to Netrounds. The specific goals and objectives does not determine the success of the project but rather it's beneficiary to the company.
+
+
+
+%The criteria of success for this project is when it's determined whether distributed tracing can be applied to architectures like \textit{event-driven architecture} or not. Furthermore the project will hinge on implementing a program with distributed tracing that can be deployed as a sub-container in a \textit{Kubernetes} cluster in the objective of testing how it can improve operations in big and complex distributed- and cloud-based systems by monitoring and detecting errors or anomalies like big latencies or component failures.
+
+
+
+
+\subsection{Risks}
+
+Due of the experimental nature of this project there are few risks to this project since the scope of the experiments can always be modified in order to cope with the situation. There are close to no risks when it comes to the implementation since it exists frameworks and documentation to lean on.
+
+The hypothetical part of combining distributed tracing with alternative architectures such as the event-driven architecture does not have any risks since every possible outcome is an answer to the question. 
+
+The only risks that exists are the goals that are linked with the company but those does not effect the success of the thesis.
+
+
+
+\section{Method}
+
+This sections describes preliminary the methods, communication and tools used that will be used during the project. All (non-confidential) documentation will be stored in the following Github repository: \href{https://github.com/NiclasNystrom/Master-Thesis-Distributed-Tracing}{Link}.
+
+\subsection{Tools \& Technologies} \label{sec:tools}
+This project will use the following tools and technologies:
+
+\begin{itemize}
+	\item AWS EC2
+	\item Kubernetes
+	\item Open-Source Frameworks that is based on the \textit{Open Tracing API} a.k.a Distribued Tracing such as:
+	\begin{itemize}
+    	\item Jaeger/Zipkin
+    	\item Istio
+    \end{itemize}
+\end{itemize}
+
+Note that the list is tentative and can be modified during the project as needed.
+
+
+
+
+\subsection{Workplace}
+All experiments will take place in the Netrounds office as they will provide with a desk and necessary equipment and tools in order to perform the experiments. It's also possible that some parts will be done from home.
+
+\subsection{Weekly report}
+
+Weekly diary (logs) will be provided as markdown documents in the linked repository. All logs will contain what I have accomplished, what problems that I've encountered for that given week and also what I will do the following week.
+
+\subsection{Documentation}
+
+All of the documentation regarding the master thesis (project plan, thesis etc) that are not related to \textit{Netrounds} will be available in the repository. 
+
+\subsection{Meetings}
+
+Meetings with the company supervisor, \netrounds_supervisor, can easily be had when needed due to daily working in the office of Netrounds (and available in Slack and Skype).\\ 
+
+Meetings with the university supervisor, \uni_supervisor, will be had when needed and mostly through online platforms like Skype. It's also possible that some meetings will take place at the university.
+
+
+
+\section{Tentative Timeline}
+
+This section contains a timeplans for the activities, such as university- and project deadlines, that as of now are planned to take place during the project. Every activity will contain rough time estimates of how long it will take to implement. In the development timeline there is two weeks of reserve time at the end if some activities does not follow the timeline.
+
+The subsections below divides the time plan by the following types of deadlines: \underline{hard-}, \underline{report-} and
+\underline{development} deadlines.
+
+
+
+\subsection{Hard Deadlines}
+
+\begin{figure}[H]
+\hspace{-2cm}\begin{adjustbox}{width=1\textwidth}
+\begin{ganttchart}[
+	canvas/.append style={fill=none, draw=black!10, line width=.75pt},
+	hgrid style/.style={draw=black!10, line width=.75pt}, x unit=0.5cm,
+	vgrid={*1{draw=black!10, line width=.75pt}},
+	today=\week,                                                                               
+	today rule/.style={
+		draw=red,
+		dash pattern=on 3.5pt off 4.5pt,
+		line width=1.0pt
+	},
+	today label font=\small\bfseries,
+	title/.style={draw=none, fill=none},
+	title label font=\bfseries\footnotesize,
+	title label node/.append style={below=7pt},
+	include title in canvas=false,
+	bar label font=\mdseries\small\color{black!70},
+	bar label node/.append style={left=.25cm},
+	bar/.append style={draw=none, fill=yellow},
+	bar incomplete/.append style={fill=black!75},
+	bar progress label font=\mdseries\footnotesize\color{black},
+	group incomplete/.append style={fill=black!60},
+	group left shift=0,
+	group right shift=0,
+	group height=.5,
+	group peaks tip position=0,
+	group label node/.append style={left=.25cm},
+	group progress label font=\bfseries\small,
+	link/.style={-latex, line width=1.5pt, black},
+	]{1}{20}
+	\gantttitle[title label node/.append style={below left=7pt and -3pt}]{WEEKS:\qquad1}{1.125}
+	\gantttitlelist{2,...,20}{1} \\                                                    
+	\ganttset{progress label text={}, link/.style={black, -to}}
+
+	\ganttbar[progress=100,name=Ideas]{Project plan}{1}{2}\\ 
+	\ganttbar[progress=100,name=Ideas]{Submit report for peer review 1}{5}{5}\\
+	\ganttbar[progress=100,name=Ideas]{Peer Review 1}{6}{6}\\ 
+	\ganttbar[progress=100,name=Ideas]{Submit report for peer review 2}{13}{13}\\
+	\ganttbar[progress=100,name=Ideas]{Peer Review 2}{14}{14}\\ 
+	\ganttbar[progress=100,name=Ideas]{Final Report}{18}{18}\\ 
+	\ganttbar[progress=100,name=Ideas]{Presentation}{20}{20}\\ 
+	                                                                 
+\end{ganttchart}
+\end{adjustbox}
+    \caption{Timeline (20 weeks) for the hard deadlines from the university.}
+    \label{fig:gantt}
+\end{figure}
+
+\normalfont
+
+\subsection{Report Deadlines}
+
+\begin{figure}[H]
+\hspace{-2cm}\begin{adjustbox}{width=1\textwidth}
+\begin{ganttchart}[
+	canvas/.append style={fill=none, draw=black!10, line width=.75pt},   
+	hgrid style/.style={draw=black!10, line width=.75pt}, x unit=0.5cm,
+	vgrid={*1{draw=black!10, line width=.75pt}},
+	today=\week,                                                                               
+	today rule/.style={
+		draw=red,
+		dash pattern=on 3.5pt off 4.5pt,
+		line width=1.0pt
+	},
+	today label font=\small\bfseries,                                                 
+	title/.style={draw=none, fill=none},
+	title label font=\bfseries\footnotesize,
+	title label node/.append style={below=7pt},
+	include title in canvas=false,
+	bar label font=\mdseries\small\color{black!70},
+	bar label node/.append style={left=.25cm},
+	bar/.append style={draw=none, fill=yellow},
+	bar incomplete/.append style={fill=black!75},
+	bar progress label font=\mdseries\footnotesize\color{black},
+	group incomplete/.append style={fill=black!60},
+	group left shift=0,
+	group right shift=0,
+	group height=.5,
+	group peaks tip position=0,
+	group label node/.append style={left=.25cm},
+	group progress label font=\bfseries\small,
+	link/.style={-latex, line width=1.5pt, black},
+	]{1}{20}
+	\gantttitle[title label node/.append style={below left=7pt and -3pt}]{WEEKS:\qquad1}{1.125}
+	\gantttitlelist{2,...,20}{1} \\                                                            
+	\ganttset{progress label text={}, link/.style={black, -to}}
+
+
+	\ganttbar[progress=100,name=Ideas]{Create structure}{3}{3} \\
+	\ganttbar[progress=100,name=Ideas]{Introduction \& History}{4}{5} \\
+	\ganttbar[progress=100,name=Ideas]{Theory}{6}{8} \\
+	\ganttbar[progress=100,name=Ideas]{Results}{9}{12} \\
+	\ganttbar[progress=100,name=Ideas]{Conclusions}{13}{15} \\
+	\ganttbar[progress=100,name=Ideas]{References}{15}{15} \\
+	\ganttbar[progress=100,name=Ideas]{Finish}{16}{18} \\
+	
+\end{ganttchart}
+\end{adjustbox}
+    \caption{Timeline (20 weeks) for the final report deadlines (tentative).}
+    \label{fig:gantt}
+\end{figure}
+
+
+
+\subsection{Development Deadlines}
+
+\begin{figure}[H]
+\hspace{-2cm}\begin{adjustbox}{width=1\textwidth}
+\begin{ganttchart}[
+	canvas/.append style={fill=none, draw=black!10, line width=.75pt},   
+	hgrid style/.style={draw=black!10, line width=.75pt}, x unit=0.5cm,
+	vgrid={*1{draw=black!10, line width=.75pt}},
+	today=\week,                                                                                        
+	today rule/.style={
+		draw=red,
+		dash pattern=on 3.5pt off 4.5pt,
+		line width=1.0pt
+	},
+	today label font=\small\bfseries,                                                 
+	title/.style={draw=none, fill=none},
+	title label font=\bfseries\footnotesize,
+	title label node/.append style={below=7pt},
+	include title in canvas=false,
+	bar label font=\mdseries\small\color{black!70},
+	bar label node/.append style={left=.25cm},
+	bar/.append style={draw=none, fill=yellow},
+	bar incomplete/.append style={fill=black!75},
+	bar progress label font=\mdseries\footnotesize\color{black},
+	group incomplete/.append style={fill=black!60},
+	group left shift=0,
+	group right shift=0,
+	group height=.5,
+	group peaks tip position=0,
+	group label node/.append style={left=.25cm},
+	group progress label font=\bfseries\small,
+	link/.style={-latex, line width=1.5pt, black},
+	]{1}{20}
+	\gantttitle[title label node/.append style={below left=7pt and -3pt}]{WEEKS:\qquad1}{1.125}
+	\gantttitlelist{2,...,20}{1} \\                                                                                                    
+	\ganttset{progress label text={}, link/.style={black, -to}}
+
+
+    \ganttbar[progress=100,name=Ideas]{Litterature study.}{1}{3} \\
+	\ganttbar[progress=100,name=Ideas]{MVP of distributed tracing (DT).}{3}{4} \\
+	\ganttbar[progress=100,name=Ideas]{Refresh AWS and Kubernetes.}{4}{5} \\
+	
+	\ganttbar[progress=100,name=Ideas]{Integrate DT with Kubernetes.}{6}{8} \\
+	
+	\ganttbar[progress=100,name=Ideas]{Perform tests.}{9}{10} \\
+	
+	\ganttbar[progress=100,name=Ideas]{Investigate event-driven architecture (EDA).}{10}{11} \\
+	\ganttbar[progress=100,name=Ideas]{Integrate if possible EDA and DT (MVP).}{11}{12} \\
+	\ganttbar[progress=100,name=Ideas]{Reserv time.}{13}{14} \\
+\end{ganttchart}
+\end{adjustbox}
+    \caption{Timeline (20 weeks) for the development deadlines (tentative).\\MVP = \textit{Minimum Viable Product}, EDA = \textit{Event-driven architecture}, DT = \textit{Distributed tracing}}
+    \label{fig:gantt}
+\end{figure}
+
+\normalfont
+
+
+
+\section{Literature}
+
+The following literature will be used in the project:
+
+\begin{itemize}[noitemsep]
+\item Open Tracing: Emerging Distributed Tracing Standard \cite{ot}
+\item Istio \cite{istio}
+\item Jaeger \cite{jaeger}
+\end{itemize}
+
+Note that the list above is the whitepaper of distributed tracing and documentation of the frameworks that may be used.  
+
+
+
+\begin{thebibliography}{9}
+\bibitem{wp} 
+Sematext. 
+\textit{Open Tracing: Emerging Distributed Tracing Standard}.
+
+\bibitem{ot} 
+Open Tracing API,
+\\\texttt{https://opentracing.io/}
+
+\bibitem{istio} 
+Istio,
+\\\texttt{https://istio.io/}
+
+\bibitem{jaeger} 
+Jaeger,
+\\\texttt{https://www.jaegertracing.io/}
+
+\end{thebibliography}
+
+
+
+
+\end{document}
