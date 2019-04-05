@@ -1,7 +1,7 @@
 #  2019-03-11 - 2019-03-17
 > Log describes what I've accomplished, problems that occurred and plans for next week.
 
-Week7: Documentation Log
+Week 8: Documentation Log
 
 ## Done
 * Fixed the issues.

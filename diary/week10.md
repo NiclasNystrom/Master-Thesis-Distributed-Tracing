@@ -1,16 +1,16 @@
-#  2019-03-18 - 2019-03-24
+#  2019-03-25 - 2019-03-31
 > Log describes what I've accomplished, problems that occurred and plans for next week.
 Note: Been sick so not much have been accomplished this week.
 
-Week 9: Documentation Log
+Week 10: Documentation Log
 
 ## Done
 * Report
-* Bugs
-* Frontend tasks
+* Fixed the remaining gateway problems.
 
 ## Problems
-* Been dealing with certificate problems that has been a real pain to get right.
+* Due to extensive networking problems, which for the most part is fixed, alternative testing solutions have been made.
+
 
 ## TODO
 * Test
